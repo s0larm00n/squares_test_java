@@ -10,12 +10,25 @@ import android.view.View;
 
 import kiarova.sqaurestestjava.squares.SquareManager;
 
-public class DrawingView extends View {
+public class DrawingView extends View implements WindowSizeProvider {
     private final Paint paint = new Paint();
-    private final SquareManager squareManager = new SquareManager(paint);
+    private final SquareManager squareManager = new SquareManager(this, paint);
+
+    private float lastTouchX;
+    private float lastTouchY;
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    @Override
+    public int getWindowWidth() {
+        return getWidth();
+    }
+
+    @Override
+    public int getWindowHeight() {
+        return getHeight();
     }
 
     @Override
@@ -27,15 +40,37 @@ public class DrawingView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            float x = event.getX();
-            float y = event.getY();
-            squareManager.addSquare(x, y, 50);
-            invalidate();
-            performClick();
-            return true;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                float x = event.getX();
+                float y = event.getY();
+                lastTouchX = x;
+                lastTouchY = y;
+                squareManager.onPointerDown(x, y);
+                invalidate();
+                performClick();
+                return true;
+            }
+            case MotionEvent.ACTION_MOVE: {
+                float x = event.getX();
+                float y = event.getY();
+                float deltaX = x - lastTouchX;
+                float deltaY = y - lastTouchY;
+                lastTouchX = x;
+                lastTouchY = y;
+                squareManager.onPointerMove(deltaX, deltaY);
+                invalidate();
+                return true;
+            }
+            case MotionEvent.ACTION_UP: {
+                squareManager.onPointerUp();
+                invalidate();
+                return true;
+            }
+            default: {
+                return super.onTouchEvent(event);
+            }
         }
-        return super.onTouchEvent(event);
     }
 
     @Override

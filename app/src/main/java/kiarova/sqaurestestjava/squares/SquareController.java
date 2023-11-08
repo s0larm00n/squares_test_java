@@ -24,11 +24,26 @@ public class SquareController {
 
     public void draw(Canvas canvas) {
         paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
+        if (highlighted) {
+            paint.setColor(Color.WHITE);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(5);
+            canvas.drawRect(rect, paint);
+        }
     }
 
     public void setHighlighted(boolean value) {
         highlighted = value;
+    }
+
+    public boolean contains(int x, int y) {
+        return rect.contains(x, y);
+    }
+
+    public void moveBy(int deltaX, int deltaY) {
+        rect.offset(deltaX, deltaY);
     }
 
 }
