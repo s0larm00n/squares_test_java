@@ -1,4 +1,4 @@
-#Square dragging demo app
+# Square dragging demo app
 
 This is a simple 2D graphics showcase Android Studio project written in Java.
 
