@@ -78,4 +78,10 @@ public class DrawingView extends View implements WindowSizeProvider {
         return super.performClick();
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        squareManager.onWindowSizeChanged();
+    }
+
 }

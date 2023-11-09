@@ -29,16 +29,24 @@ public class SquareManager {
 
     public void onPointerDown(float touchX, float touchY) {
         focusedSquare = getSquareAt(touchX, touchY);
+        focusedSquare.ensureBorders(windowSizeProvider.getWindowWidth(), windowSizeProvider.getWindowHeight());
     }
 
     public void onPointerMove(float deltaX, float deltaY) {
         if (focusedSquare != null) {
             focusedSquare.moveBy((int) deltaX, (int) deltaY);
+            focusedSquare.ensureBorders(windowSizeProvider.getWindowWidth(), windowSizeProvider.getWindowHeight());
         }
     }
 
     public void onPointerUp() {
         focusedSquare = null;
+    }
+
+    public void onWindowSizeChanged() {
+        for (SquareController square : squares) {
+            square.ensureBorders(windowSizeProvider.getWindowWidth(), windowSizeProvider.getWindowHeight());
+        }
     }
 
     private SquareController addSquare(float touchX, float touchY, int size) {
